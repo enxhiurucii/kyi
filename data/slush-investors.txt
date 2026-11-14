@@ -1,0 +1,7 @@
+# Investors to pre-load for the demo (one per line). Lines starting with # are ignored.
+Lifeline Ventures
+Maki.vc
+Inventure
+Icebreaker.vc
+Voima Ventures
+byFounders
