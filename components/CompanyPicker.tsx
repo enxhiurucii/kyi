@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { getJSON } from "@/lib/client";
 import type { Company, DataMode } from "@/lib/types";
-import { field, Spinner } from "./ui";
+import { SearchPulse } from "./GraphLoading";
+import { field } from "./ui";
 
 export default function CompanyPicker({
   value,
@@ -76,7 +77,7 @@ export default function CompanyPicker({
         }}
         aria-label="Company to diligence"
       />
-      {searching && <Spinner className="absolute right-3 top-3 text-muted" />}
+      {searching && <SearchPulse className="absolute right-3 top-3" />}
       {open && q.trim().length >= 2 && (
         <ul className="absolute z-20 mt-1 max-h-64 w-full overflow-auto rounded-xl border border-line bg-[#12141c] p-1 shadow-2xl">
           {items.map((it) => (

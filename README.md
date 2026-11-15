@@ -80,6 +80,20 @@ Open http://localhost:3000.
 
 Without keys, features **hide** or fall back to **Demo** — nothing crashes.
 
+## Deploy on Railway (GitHub)
+
+1. Push this repo to GitHub (already: `enxhiurucii/kyi`).
+2. [Railway](https://railway.app) → **New Project** → **Deploy from GitHub repo** → pick `kyi`.
+3. Railway auto-detects Next.js via `railway.toml` (`npm run build` / `npm run start`).
+4. Open the service → **Variables** → add the keys below (at least `CALA_API_KEY` for Live mode).
+5. **Settings → Networking → Generate Domain** (or attach a custom domain).
+6. If you use Supabase auth: in the Supabase dashboard add  
+   `https://YOUR-RAILWAY-DOMAIN/auth/callback`  
+   under Authentication → URL configuration (Redirect URLs), and set Site URL to your Railway domain.
+7. Redeploy after changing env vars. Check `/api/health` — `calaConfigured` / `aiEnabled` should match what you set.
+
+**Note:** Cala responses cache to disk (`.kyi-cache/`). On Railway that disk is ephemeral (cleared on redeploy). Fine for a hackathon; add a Railway Volume mounted at `/app/.kyi-cache` if you want the cache to survive restarts.
+
 ### Rate limit & warm
 
 Cala hackathon keys ≈ **10 req/min**. First full report ≈ **2–4 min**, then cached in `.kyi-cache/`.

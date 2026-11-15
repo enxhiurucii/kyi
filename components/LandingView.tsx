@@ -5,10 +5,11 @@ import { useRouter } from "next/navigation";
 import { profileStore } from "@/lib/profileStore";
 import { btn, Chip, cx, FitPage } from "./ui";
 
-const FLOW = [
-  { from: "Investor", to: "Funding rounds", detail: "leads + sources" },
-  { from: "Funding rounds", to: "Startups", detail: "portfolio graph" },
-  { from: "Startups", to: "What happened next", detail: "follow-on / raise-soon" },
+const WALK = [
+  { title: "Investor", text: "Who they are, how active, how often they lead.", detail: "leads + sources" },
+  { title: "Funding rounds", text: "Every round they joined — date, size, co-investors.", detail: "dated + sourced" },
+  { title: "Startups", text: "Their portfolio, and any conflict with yours.", detail: "portfolio graph" },
+  { title: "What happened next", text: "Follow-on rounds, and who is likely to raise soon.", detail: "follow-on / raise-soon" },
 ];
 
 export default function LandingView() {
@@ -53,6 +54,7 @@ export default function LandingView() {
           <div className="hero-enter mt-5 flex flex-wrap gap-2" style={{ animationDelay: "260ms" }}>
             <button
               type="button"
+              data-testid="persona-anna"
               className={btn.secondary}
               onClick={() => {
                 profileStore.loadDemoProfile();
@@ -63,6 +65,7 @@ export default function LandingView() {
             </button>
             <button
               type="button"
+              data-testid="persona-mikko"
               className={btn.secondary}
               onClick={() => {
                 profileStore.loadDemoInvestorProfile();
@@ -76,44 +79,31 @@ export default function LandingView() {
           </div>
         </section>
 
-        <aside className="min-h-0 min-w-0 rounded-2xl border border-line bg-black/30 p-4 fit:flex fit:flex-col fit:overflow-hidden">
-          <p className="text-[11px] font-semibold tracking-[0.18em] text-muted uppercase">How it works</p>
-          <h2 className="mt-1 text-base font-semibold tracking-tight">Graph walk — not a black box</h2>
-          <svg viewBox="0 0 400 220" className="mt-3 w-full flex-1" aria-hidden>
-            <defs>
-              <linearGradient id="kyi-edge" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.2" />
-                <stop offset="100%" stopColor="var(--accent)" stopOpacity="0.8" />
-              </linearGradient>
-            </defs>
-            {[
-              { x: 40, y: 40, label: "Investor" },
-              { x: 160, y: 100, label: "Funding rounds" },
-              { x: 280, y: 40, label: "Startups" },
-              { x: 280, y: 160, label: "What next" },
-            ].map((n) => (
-              <g key={n.label}>
-                <rect x={n.x} y={n.y} width={100} height={36} rx={10} fill="var(--surface-2)" stroke="var(--line)" />
-                <text x={n.x + 50} y={n.y + 22} textAnchor="middle" fill="var(--ink)" fontSize="11" fontWeight="600">
-                  {n.label}
-                </text>
-              </g>
-            ))}
-            <path d="M140 58 H160 V118" fill="none" stroke="url(#kyi-edge)" strokeWidth="2" />
-            <path d="M260 118 H280 V58" fill="none" stroke="url(#kyi-edge)" strokeWidth="2" />
-            <path d="M330 76 V160" fill="none" stroke="url(#kyi-edge)" strokeWidth="2" />
-          </svg>
-          <ul className="mt-2 space-y-1.5 text-xs text-ink-2 fit:mt-auto">
-            {FLOW.map((f) => (
-              <li key={f.from} className="flex flex-wrap items-center gap-1.5">
-                <span className="font-medium text-ink">{f.from}</span>
-                <span className="text-muted">→</span>
-                <span>{f.to}</span>
-                <Chip tone="neutral">{f.detail}</Chip>
+        <aside className="relative z-10 min-h-0 min-w-0 rounded-2xl border border-line bg-black/45 p-5 backdrop-blur-[2px] fit:flex fit:flex-col fit:justify-center fit:overflow-hidden">
+          <div className="self-start rounded-xl bg-black/55 px-3 py-2 backdrop-blur-md">
+            <p className="text-[11px] font-semibold tracking-[0.18em] text-muted uppercase">How it works</p>
+            <h2 className="mt-0.5 text-lg font-semibold tracking-tight text-ink">Graph walk — not a black box</h2>
+          </div>
+          <ol className="mt-4">
+            {WALK.map((s, i) => (
+              <li key={s.title} className="relative flex gap-3 pb-3 last:pb-0">
+                {i < WALK.length - 1 ? (
+                  <span aria-hidden className="absolute top-9 bottom-0 left-[17px] w-px bg-accent/50" />
+                ) : null}
+                <span className="relative flex size-9 shrink-0 items-center justify-center rounded-full border border-accent/60 bg-black/70 text-sm font-semibold text-accent backdrop-blur-md">
+                  {i + 1}
+                </span>
+                <div className="min-w-0 rounded-xl border border-white/5 bg-black/55 px-3 py-2 backdrop-blur-md">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-[15px] font-semibold text-ink">{s.title}</span>
+                    <Chip tone="neutral">{s.detail}</Chip>
+                  </div>
+                  <p className="mt-0.5 text-[13px] leading-snug text-ink-2">{s.text}</p>
+                </div>
               </li>
             ))}
-          </ul>
-          <div className="mt-3 flex flex-wrap gap-1.5">
+          </ol>
+          <div className="mt-4 flex flex-wrap gap-1.5">
             {["Every number sourced", "Conflicts flagged", "Demo works offline"].map((b) => (
               <Chip key={b} tone="good">
                 {b}

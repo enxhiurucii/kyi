@@ -15,6 +15,7 @@ import InvestorPicker from "./InvestorPicker";
 import InterestedInvestors from "./InterestedInvestors";
 import RankedList from "./RankedList";
 import { SCOUT_HANDOFF_KEY, type ScoutHandoff } from "@/lib/scout/handoff";
+import GraphLoading from "./GraphLoading";
 import { btn, Card, cx, field, FitPage, Label, ModeBadge, Spinner } from "./ui";
 
 type Health = { defaultMode: DataMode; calaConfigured: boolean; aiEnabled?: boolean };
@@ -188,7 +189,8 @@ export default function HomeView() {
         </div>
       </div>
 
-      <div className="fit:hidden">
+      {/* fit:hidden on normal desktop; .present-show overrides in present mode for demo capture */}
+      <div className="fit:hidden present-show">
         <InterestedInvestors mode={mode} />
       </div>
 
@@ -277,15 +279,14 @@ export default function HomeView() {
   const results = (
     <div className="flex min-h-0 min-w-0 flex-1 flex-col">
       {run.status === "loading" && (
-        <div className="mb-3 rounded-2xl border border-accent/25 bg-accent-soft p-3 text-sm text-ink-2" aria-live="polite">
-          <div className="flex items-center gap-2">
-            <Spinner className="text-accent" />
-            Scoring {run.count}… <span className="tabular text-muted">{elapsed}s</span>
-          </div>
-          {mode === "cala" ? (
-            <p className="mt-1 text-xs text-muted">Live Cala ~10 req/min. First run can take a minute; then cached.</p>
-          ) : null}
-        </div>
+        <GraphLoading
+          className="mb-3"
+          size="inline"
+          title={`Scoring ${run.count} investors`}
+          detail={mode === "cala" ? "Live Cala · first run can take a minute, then cached" : "Ranking by fit on the demo graph"}
+          elapsed={elapsed}
+          lines={["Walking each investor", "Checking stage & sector fit", "Scoring leads & follow-on", "Flagging conflicts"]}
+        />
       )}
       {run.status === "error" && <div className="mb-3 rounded-2xl border border-bad/30 bg-bad-soft p-3 text-sm text-bad">{run.error}</div>}
 

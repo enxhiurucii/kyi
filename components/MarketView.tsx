@@ -17,7 +17,8 @@ import type { MarketReport, Round, Thesis } from "@/lib/types";
 import { STAGE_LABEL, type DataMode } from "@/lib/types";
 import ExpressInterest, { isDiscoverableOnKyi, OnKyiBadge } from "./ExpressInterest";
 import EvidenceDrawer, { type Evidence } from "./EvidenceDrawer";
-import { btn, Card, Chip, cx, FitPage, Label, ModeBadge, ScoreRing, Spinner } from "./ui";
+import GraphLoading from "./GraphLoading";
+import { btn, Card, Chip, cx, FitPage, Label, ModeBadge, ScoreRing } from "./ui";
 
 const MIKKO_THESIS: Thesis = {
   sectors: ["logistics", "mobility"],
@@ -181,19 +182,17 @@ export default function MarketView() {
   if (loading || (!report && !error)) {
     const live = modeHint !== "demo";
     return (
-      <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6" aria-live="polite">
-        <p className="text-[11px] font-semibold tracking-[0.14em] text-muted uppercase">{live ? "Live" : "Demo"}</p>
-        <h1 className="mt-3 flex items-center gap-2 text-2xl font-semibold tracking-tight">
-          <Spinner className="text-accent" />
-          {live ? "Reading Cala’s graph" : "Building the radar"}
-        </h1>
-        <p className="mt-2 text-sm text-muted">
-          {live
+      <GraphLoading
+        eyebrow={live ? "Live" : "Demo"}
+        title={live ? "Reading Cala’s graph" : "Building the radar"}
+        detail={
+          live
             ? "First time takes a minute, then cached. Sector queries + company confirms…"
-            : "Scoring the demo market sample…"}
-          {elapsed > 0 ? ` ${elapsed}s` : ""}
-        </p>
-      </div>
+            : "Scoring the demo market sample…"
+        }
+        lines={["Scanning the market", "Finding lead investors", "Ranking raise-soon startups", "Sourcing every number"]}
+        elapsed={elapsed}
+      />
     );
   }
 
@@ -357,7 +356,7 @@ export default function MarketView() {
               <Label>Funding per quarter</Label>
               <FundingQuarterChart data={r.quarterly} />
             </Card>
-            <Card className="flex min-h-0 min-w-0 flex-1 flex-col p-3">
+            <Card data-testid="radar-leads" className="flex min-h-0 min-w-0 flex-1 flex-col p-3">
               <Label>Lead investors</Label>
               <ul className="mt-2 min-h-0 flex-1 divide-y divide-line/60 overflow-auto fit:fit-scroll">
                 {r.topLeads.map((lead) => (
@@ -438,7 +437,7 @@ export default function MarketView() {
         </p>
       </header>
 
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">{kpiRow}</div>
+      <div data-testid="radar-kpis" className="grid grid-cols-2 gap-3 lg:grid-cols-4">{kpiRow}</div>
 
       <Card className="mt-6 p-5 sm:p-6">
         <Label>Funding per quarter</Label>
@@ -449,7 +448,7 @@ export default function MarketView() {
       </Card>
 
       {/* Companies to watch — star of the page */}
-      <section className="mt-10">
+      <section className="mt-10" data-testid="company-to-watch">
         <Label>Raise-soon</Label>
         <h2 className="mt-1 text-2xl font-semibold tracking-tight">Companies to watch</h2>
         <p className="mt-1 text-sm text-muted">Early-stage, 9–30 months since last raise, matching your thesis.</p>

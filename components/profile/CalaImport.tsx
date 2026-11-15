@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { ApiError, getJSON, postJSON } from "@/lib/client";
 import type { CompanyProfile, FounderProfile, ImportedFact } from "@/lib/profiles/types";
 import type { DataMode } from "@/lib/types";
-import { btn, Chip, cx, field, Label, Spinner } from "@/components/ui";
+import GraphLoading, { SearchPulse } from "@/components/GraphLoading";
+import { btn, Chip, cx, field, Label } from "@/components/ui";
 
 type Kind = "founder" | "company";
 
@@ -170,16 +171,22 @@ export default function CalaImport({ kind, queryHint = "", mode: modeProp, onApp
           aria-label={kind === "founder" ? "Search people" : "Search companies"}
         />
         <button type="button" className={btn.secondary} onClick={() => void search()} disabled={searching || importing}>
-          {searching ? <Spinner /> : null}
+          {searching ? <SearchPulse /> : null}
           Search
         </button>
       </div>
 
       {(searching || importing) && (
-        <p className="flex items-center gap-2 text-xs text-muted" aria-live="polite">
-          <Spinner className="text-accent" />
-          {importing ? loadingHint : "Searching…"}
-        </p>
+        <GraphLoading
+          size="inline"
+          title={importing ? "Importing from Cala" : "Searching the graph"}
+          detail={importing ? loadingHint : "Matching names on Cala…"}
+          lines={
+            importing
+              ? ["Reading the entity", "Pulling funding rounds", "Collecting sourced facts", "Building your profile"]
+              : ["Looking up the name", "Matching entities", "Preparing results"]
+          }
+        />
       )}
 
       {dataMode && searched && (

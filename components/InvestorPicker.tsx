@@ -4,7 +4,8 @@
 import { useEffect, useRef, useState } from "react";
 import { getJSON, parseInvestorList } from "@/lib/client";
 import type { DataMode, Investor } from "@/lib/types";
-import { field, Spinner } from "./ui";
+import { SearchPulse } from "./GraphLoading";
+import { field } from "./ui";
 
 export default function InvestorPicker({ value, onChange, mode }: { value: string; onChange: (v: string) => void; mode: DataMode }) {
   const [q, setQ] = useState("");
@@ -68,7 +69,7 @@ export default function InvestorPicker({ value, onChange, mode }: { value: strin
           }}
           aria-label="Search investors"
         />
-        {searching && <Spinner className="absolute right-3 top-3 text-muted" />}
+        {searching && <SearchPulse className="absolute right-3 top-3" />}
         {open && q.trim().length >= 2 && (
           <ul className="absolute z-20 mt-1 max-h-64 w-full overflow-auto rounded-xl border border-line bg-[#12141c] p-1 shadow-2xl">
             {items.map((it) => (

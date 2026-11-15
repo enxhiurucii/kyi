@@ -2,10 +2,13 @@
   "name": "kyi",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -H 0.0.0.0",
     "lint": "eslint",
     "probe": "tsx --env-file=.env.local scripts/cala-probe.ts",
     "warm": "node scripts/warm-cache.mjs",
@@ -26,8 +29,8 @@
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "4.3.3",
-    "@types/node": "^20",
-    "@types/react": "^19",
+    "@types/node": "20.19.43",
+    "@types/react": "19.3.0",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.4.6",
@@ -35,6 +38,6 @@
     "playwright": "^1.65.1",
     "tailwindcss": "4.3.3",
     "tsx": "^4.23.15",
-    "typescript": "^5"
+    "typescript": "5.9.3"
   }
 }

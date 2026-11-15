@@ -4,7 +4,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { getJSON } from "@/lib/client";
 import type { DataMode, Investor } from "@/lib/types";
-import { field, Spinner } from "./ui";
+import { SearchPulse } from "./GraphLoading";
+import { field } from "./ui";
 
 /** Single-investor search that opens a report with no startup context. */
 export default function InvestorLookup({ mode }: { mode: DataMode }) {
@@ -69,7 +70,7 @@ export default function InvestorLookup({ mode }: { mode: DataMode }) {
         }}
         aria-label="Search investor"
       />
-      {searching && <Spinner className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-muted" />}
+      {searching && <SearchPulse className="absolute right-3 top-1/2 -translate-y-1/2" />}
       {showMenu && (
         <ul className="absolute top-full left-0 z-50 mt-1 max-h-64 w-full overflow-auto rounded-xl border border-line bg-[#0c0e14] p-1 shadow-[0_18px_50px_rgba(0,0,0,0.55)] ring-1 ring-white/10">
           {items.length === 0 && !searching ? (

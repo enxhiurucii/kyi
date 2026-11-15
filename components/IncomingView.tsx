@@ -11,6 +11,7 @@ import CompanyPicker from "./CompanyPicker";
 import DiscoverStartups from "./DiscoverStartups";
 import EvidenceDrawer, { type Evidence } from "./EvidenceDrawer";
 import GraphScene from "./GraphScene";
+import GraphLoading from "./GraphLoading";
 import { btn, Card, Chip, cx, field, Label, ModeBadge, Spinner } from "./ui";
 
 type Tab = "discover" | "diligence";
@@ -189,10 +190,14 @@ export default function IncomingView() {
           </Card>
 
           {run.status === "loading" && (
-            <div className="mt-6 flex items-center gap-3 rounded-2xl border border-accent/25 bg-accent-soft p-4 text-sm text-ink-2" aria-live="polite">
-              <Spinner className="text-accent" />
-              Walking graph… <span className="tabular text-muted">{elapsed}s</span>
-            </div>
+            <GraphLoading
+              className="mt-6"
+              size="inline"
+              title="Walking the graph"
+              detail="Diligence on this company"
+              elapsed={elapsed}
+              lines={["Reading the company", "Following funding rounds", "Checking co-investors", "Sourcing every number"]}
+            />
           )}
           {run.status === "error" && <div className="mt-6 rounded-2xl border border-bad/30 bg-bad-soft p-4 text-sm text-bad">{run.error}</div>}
           {run.status === "done" && <Brief brief={run.brief} onEvidence={setEvidence} />}

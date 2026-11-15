@@ -7,7 +7,8 @@ import { modeFromParams, postJSON, reportHref, startupFromParams } from "@/lib/c
 import { fmtEur, fmtMonthsAgo, fmtPct } from "@/lib/format";
 import type { InvestorReport } from "@/lib/types";
 import { STAGE_LABEL } from "@/lib/types";
-import { btn, Card, Chip, cx, FitPage, ModeBadge, ScoreRing, Skeleton, Spinner, StatusPill } from "./ui";
+import GraphLoading from "./GraphLoading";
+import { btn, Card, Chip, cx, FitPage, ModeBadge, ScoreRing, StatusPill } from "./ui";
 
 type State = { key: string; reports?: InvestorReport[]; error?: string };
 
@@ -152,17 +153,14 @@ export default function CompareView() {
       {startup && <p className="mt-1 shrink-0 text-sm text-ink-2 fit:text-xs">For “{startup.description}”</p>}
 
       {!current && (
-        <div className="score-panel mt-6 space-y-3 rounded-3xl border border-line p-6 fit:mt-3 fit:p-4">
-          <div className="space-y-2 text-sm text-ink-2">
-            <div className="flex items-center gap-2">
-              <Spinner className="text-accent" /> Building {ids.length} report cards…
-            </div>
-            <p className="text-xs text-muted">
-              Live mode walks Cala&apos;s graph (~10 req/min). First compare can take a few minutes; then it is cached.
-            </p>
-          </div>
-          <Skeleton className="h-80 fit:h-48" />
-        </div>
+        <GraphLoading
+          className="mt-6 fit:mt-3"
+          size="panel"
+          eyebrow="Compare"
+          title={`Building ${ids.length} report cards`}
+          detail="Live mode walks Cala's graph (~10 req/min). First compare can take a few minutes; then it is cached."
+          lines={["Walking each investor", "Aligning funding rounds", "Checking portfolio overlap", "Scoring side by side"]}
+        />
       )}
       {current?.error && <div className="mt-6 rounded-2xl border border-bad/30 bg-bad-soft p-4 text-sm text-bad">{current.error}</div>}
 

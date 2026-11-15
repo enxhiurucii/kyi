@@ -17,9 +17,19 @@ export function Chip({ tone = "neutral", children, className }: { tone?: Tone; c
   return <span className={cx("inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-medium", TONE[tone], className)}>{children}</span>;
 }
 
-export function Card({ children, className, id }: { children: ReactNode; className?: string; id?: string }) {
+export function Card({
+  children,
+  className,
+  id,
+  "data-testid": testId,
+}: {
+  children: ReactNode;
+  className?: string;
+  id?: string;
+  "data-testid"?: string;
+}) {
   return (
-    <section id={id} className={cx("card-glass rounded-2xl", className)}>
+    <section id={id} data-testid={testId} className={cx("card-glass rounded-2xl", className)}>
       {children}
     </section>
   );

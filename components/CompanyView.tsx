@@ -17,7 +17,8 @@ import { STAGE_LABEL, type DataMode } from "@/lib/types";
 import ExpressInterest, { isDiscoverableOnKyi, OnKyiBadge } from "./ExpressInterest";
 import EvidenceDrawer, { type Evidence } from "./EvidenceDrawer";
 import Tabs from "./Tabs";
-import { btn, Card, Chip, FitPage, Label, ModeBadge, ScoreRing, Spinner } from "./ui";
+import GraphLoading from "./GraphLoading";
+import { btn, Card, Chip, FitPage, Label, ModeBadge, ScoreRing } from "./ui";
 
 function DataNotesHint({ warnings }: { warnings: string[] }) {
   const title = warnings.length ? warnings.join(" · ") : "No gaps flagged.";
@@ -124,17 +125,13 @@ export default function CompanyView() {
   if (loading || (!report && !error)) {
     const live = modeHint !== "demo";
     return (
-      <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6" aria-live="polite">
-        <p className="text-[11px] font-semibold tracking-[0.14em] text-muted uppercase">{live ? "Live" : "Demo"}</p>
-        <h1 className="mt-3 flex items-center gap-2 text-2xl font-semibold tracking-tight">
-          <Spinner className="text-accent" />
-          {live ? "Reading Cala’s graph" : "Building company card"}
-        </h1>
-        <p className="mt-2 text-sm text-muted">
-          {live ? "First time takes a minute, then cached…" : "Loading rounds and founders…"}
-          {elapsed > 0 ? ` ${elapsed}s` : ""}
-        </p>
-      </div>
+      <GraphLoading
+        eyebrow={live ? "Live" : "Demo"}
+        title={live ? "Reading Cala’s graph" : "Building company card"}
+        detail={live ? "First time takes a minute, then cached…" : "Loading rounds and founders…"}
+        lines={["Walking the investor", "Following funding rounds", "Opening founders", "Reading what happened next"]}
+        elapsed={elapsed}
+      />
     );
   }
 
@@ -251,7 +248,7 @@ export default function CompanyView() {
           </div>
         </div>
 
-        <Card className="print-break-avoid shrink-0 p-4">
+        <Card data-testid="company-card" className="print-break-avoid shrink-0 p-4">
           <div className="flex flex-wrap items-start gap-4">
             <div className="min-w-0 flex-1">
               <h1 className="text-xl font-semibold tracking-tight">{r.company.name}</h1>
@@ -307,8 +304,16 @@ export default function CompanyView() {
               className="min-h-0 flex-1"
               initial="investors"
               tabs={[
-                { id: "investors", label: "Investors", panel: investorsPanel },
-                { id: "founders", label: "Founders", panel: foundersPanel },
+                {
+                  id: "investors",
+                  label: "Investors",
+                  panel: <div data-testid="company-investors">{investorsPanel}</div>,
+                },
+                {
+                  id: "founders",
+                  label: "Founders",
+                  panel: <div data-testid="company-founders">{foundersPanel}</div>,
+                },
               ]}
             />
           </Card>

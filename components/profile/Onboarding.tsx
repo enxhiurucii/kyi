@@ -15,7 +15,8 @@ import type {
 } from "@/lib/profiles/types";
 import { SECTOR_KEYWORDS } from "@/lib/similarity";
 import { STAGE_LABEL, STAGE_ORDER, type DataMode, type Investor, type Stage } from "@/lib/types";
-import { btn, Card, Chip, cx, field, Label, Spinner } from "@/components/ui";
+import { SearchPulse } from "@/components/GraphLoading";
+import { btn, Card, Chip, cx, field, Label } from "@/components/ui";
 import CalaImport from "./CalaImport";
 
 const SECTORS = Object.keys(SECTOR_KEYWORDS);
@@ -447,7 +448,7 @@ export default function Onboarding() {
                     }}
                     placeholder="Search investors / firms…"
                   />
-                  {firmSearching && <Spinner className="absolute right-3 top-3 text-muted" />}
+                  {firmSearching && <SearchPulse className="absolute right-3 top-3" />}
                 </div>
                 {firmHits.length > 0 && (
                   <ul className="mt-2 max-h-48 overflow-auto rounded-xl border border-line bg-[#12141c] p-1">

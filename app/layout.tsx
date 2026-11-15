@@ -8,6 +8,7 @@ import AuthProvider from "@/components/auth/AuthProvider";
 import UserMenu from "@/components/auth/UserMenu";
 import GraphBackdrop from "@/components/GraphBackdrop";
 import PresentMode from "@/components/PresentMode";
+import RouteProgress from "@/components/RouteProgress";
 import { Chip } from "@/components/ui";
 import "./globals.css";
 
@@ -24,6 +25,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AuthProvider>
           <Suspense fallback={null}>
             <PresentMode />
+          </Suspense>
+          <Suspense fallback={null}>
+            <RouteProgress />
           </Suspense>
           <div className="ambient" aria-hidden />
           <GraphBackdrop />

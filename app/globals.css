@@ -91,6 +91,10 @@ html[data-present="true"] [data-toast],
 html[data-present="true"] footer.app-footer {
   display: none !important;
 }
+/* Inbound interest cards stay visible in present/demo capture despite fit:hidden */
+html[data-present="true"] .present-show {
+  display: block !important;
+}
 
 ::selection {
   background: var(--accent-soft);
@@ -320,6 +324,158 @@ option {
     animation: none !important;
   }
 }
+
+/* —— Route + graph loading —— */
+.route-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 70;
+  height: 2px;
+  width: 0;
+  border-radius: 0 2px 2px 0;
+  background: linear-gradient(90deg, #6d74c4, #9a9bff 45%, #5ee0b0);
+  box-shadow: 0 0 18px rgba(154, 155, 255, 0.65);
+  transition: width 240ms ease-out, opacity 200ms ease;
+}
+.route-progress-bar.is-running {
+  animation: route-progress-run 8s cubic-bezier(0.08, 0.6, 0.1, 1) forwards;
+}
+.route-progress-bar.is-done {
+  width: 100%;
+  opacity: 0;
+}
+@keyframes route-progress-run {
+  0% {
+    width: 0;
+  }
+  12% {
+    width: 28%;
+  }
+  40% {
+    width: 58%;
+  }
+  70% {
+    width: 78%;
+  }
+  100% {
+    width: 92%;
+  }
+}
+.route-progress-veil {
+  animation: kyi-fade-up 220ms ease-out both;
+}
+
+.graph-load-stage {
+  filter: drop-shadow(0 18px 40px rgba(80, 82, 200, 0.28));
+}
+.graph-load-edge {
+  stroke: rgba(154, 155, 255, 0.85);
+  stroke-dasharray: 180;
+  stroke-dashoffset: 180;
+  opacity: 0.22;
+  transition:
+    stroke-dashoffset 520ms ease,
+    opacity 320ms ease;
+}
+.graph-load-edge.is-on {
+  stroke-dashoffset: 0;
+  opacity: 1;
+}
+.graph-load-ring {
+  fill: rgba(18, 20, 28, 0.88);
+  stroke: rgba(255, 255, 255, 0.1);
+  transition:
+    stroke 280ms ease,
+    filter 280ms ease;
+}
+.graph-load-dot {
+  fill: rgba(154, 155, 255, 0.3);
+  transform-origin: center;
+  transform-box: fill-box;
+  transition: fill 280ms ease;
+}
+.graph-load-label {
+  fill: rgba(184, 190, 203, 0.7);
+  font-size: 10px;
+  font-weight: 600;
+  transition: fill 280ms ease;
+}
+.graph-load-node.is-on .graph-load-ring {
+  stroke: rgba(154, 155, 255, 0.55);
+}
+.graph-load-node.is-on .graph-load-dot {
+  fill: #9a9bff;
+}
+.graph-load-node.is-on .graph-load-label {
+  fill: #eef0f4;
+}
+.graph-load-node.is-current .graph-load-ring {
+  filter: drop-shadow(0 0 14px rgba(154, 155, 255, 0.55));
+  stroke: #9a9bff;
+}
+.graph-load-node.is-current .graph-load-dot {
+  animation: graph-load-pulse 900ms ease-in-out infinite;
+}
+@keyframes graph-load-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.35);
+    opacity: 0.85;
+  }
+}
+.graph-load-bar span {
+  display: block;
+  height: 100%;
+  width: 40%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, transparent, #9a9bff, #5ee0b0, transparent);
+  animation: graph-load-bar 1.25s ease-in-out infinite;
+}
+@keyframes graph-load-bar {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(280%);
+  }
+}
+
+.search-pulse {
+  background: linear-gradient(145deg, #6d74c4, #1a1d26 72%);
+  box-shadow: 0 0 0 0 rgba(154, 155, 255, 0.45);
+  animation: search-pulse 1.2s ease-in-out infinite;
+}
+@keyframes search-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(154, 155, 255, 0.4);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(154, 155, 255, 0);
+    transform: scale(1.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-progress-bar.is-running,
+  .route-progress-veil,
+  .graph-load-node.is-current .graph-load-dot,
+  .graph-load-bar span,
+  .search-pulse {
+    animation: none !important;
+  }
+  .graph-load-edge {
+    stroke-dashoffset: 0;
+    opacity: 0.7;
+  }
+}
+
 .cursor-aura {
   position: fixed;
   top: 0;

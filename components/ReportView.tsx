@@ -10,6 +10,7 @@ import type { InvestorReport, Round, Tone } from "@/lib/types";
 import { STAGE_LABEL } from "@/lib/types";
 import AskPanel from "./AskPanel";
 import EvidenceDrawer, { type Evidence } from "./EvidenceDrawer";
+import GraphLoading from "./GraphLoading";
 import Tabs from "./Tabs";
 import { Bars, btn, Card, Chip, cx, FitPage, Label, ModeBadge, ScoreRing, Sparkline, StatusPill } from "./ui";
 
@@ -391,16 +392,16 @@ function Shell({ children }: { children: ReactNode }) {
 const WALK_LINES = ["Walking the investor", "Following funding rounds", "Opening portfolio companies", "Reading what happened next"];
 
 export function ReportSkeleton({ elapsed = 0, live = false }: { elapsed?: number; live?: boolean }) {
-  const line = WALK_LINES[Math.min(WALK_LINES.length - 1, Math.floor(elapsed / 4))];
   return (
-    <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6" aria-live="polite">
-      <p className="text-[11px] font-semibold tracking-[0.14em] text-muted uppercase">{live ? "Live" : "Demo"}</p>
-      <h1 className="mt-3 text-2xl font-semibold tracking-tight">{line}</h1>
-      <p className="mt-2 text-sm text-muted">
-        {live
-          ? `First full card ~2–4 min on a paced Cala key, then cached…${elapsed > 0 ? ` ${elapsed}s` : ""}`
-          : `Building the brief…${elapsed > 0 ? ` ${elapsed}s` : ""}`}
-      </p>
-    </div>
+    <GraphLoading
+      eyebrow={live ? "Live" : "Demo"}
+      lines={WALK_LINES}
+      detail={
+        live
+          ? "First full card ~2–4 min on a paced Cala key, then cached…"
+          : "Building the brief…"
+      }
+      elapsed={elapsed}
+    />
   );
 }
